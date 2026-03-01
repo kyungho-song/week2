@@ -13,6 +13,8 @@ A high-performance, visually stunning web application for predicting K-League ma
 
 ### Features
 - **Match Selection:** Browse through current 2026 K-League matches.
+- **Match Schedule:** Display upcoming match dates and times.
+- **League Standings:** Real-time league table showing rank, team, points, and stats.
 - **AI Prediction Engine:** A simulated prediction logic that analyzes "team stats" to suggest a score.
 - **Multi-League Support:** Separate pages for K-League 1 and K-League 2.
 - **Interactive Web Components:** Encapsulated `<match-card>` elements for each game.
@@ -24,10 +26,10 @@ A high-performance, visually stunning web application for predicting K-League ma
 - **Icons:** SVG-based iconography for sharpness.
 
 ## Current Plan
-1. **Update Data for 2026:** Include all K1 and K2 teams and schedules.
-2. **Multi-Page Implementation:** 
-    - Modify `index.html` to be K1 focused with a nav to K2.
-    - Create `k2.html` for K2 League.
-3. **Refine `main.js`:** Update logic to handle league-specific data injection based on the current page.
-4. **Enhanced UI:** Add navigation tabs for switching between leagues.
+1. **Add Schedule Data:** Include match dates and times in the data structure.
+2. **Implement Standings Table:** Create a new section and component to display league rankings.
+3. **Update UI:** 
+    - Modify `index.html` and `k2.html` to include the standings section.
+    - Update `style.css` for table styling.
+4. **Refine Logic:** Calculate standings dynamically based on "current" mock data or static initial values.
 5. **Deployment:** Commit and push the updated application to GitHub.
