@@ -22,10 +22,13 @@ class MatchPrediction extends HTMLElement {
     get awayLogo() { return this.getAttribute('away-logo'); }
     get matchDate() { return this.getAttribute('match-date'); }
     get matchTime() { return this.getAttribute('match-time'); }
+    get status() { return this.getAttribute('status') || 'upcoming'; }
     get homePower() { return parseInt(this.getAttribute('home-power') || '50'); }
     get awayPower() { return parseInt(this.getAttribute('away-power') || '50'); }
 
     predict() {
+        if (this.status === 'finished') return;
+
         const totalPower = this.homePower + this.awayPower;
         const homeWeight = this.homePower / totalPower;
         
@@ -36,7 +39,10 @@ class MatchPrediction extends HTMLElement {
         this.setAttribute('away-score', aScore);
         this.setAttribute('predicted', 'true');
         
-        // Dispatch event for standings update
+        this.notifyUpdate(hScore, aScore);
+    }
+
+    notifyUpdate(hScore, aScore) {
         this.dispatchEvent(new CustomEvent('match-predicted', {
             bubbles: true,
             composed: true,
@@ -44,12 +50,14 @@ class MatchPrediction extends HTMLElement {
                 home: this.homeTeam,
                 away: this.awayTeam,
                 hScore: hScore,
-                aScore: aScore
+                aScore: aScore,
+                status: this.status
             }
         }));
     }
 
     render() {
+        const isFinished = this.status === 'finished';
         const hScore = this.getAttribute('home-score') || '0';
         const aScore = this.getAttribute('away-score') || '0';
         const isPredicted = this.hasAttribute('predicted');
@@ -59,6 +67,7 @@ class MatchPrediction extends HTMLElement {
                 :host {
                     --card-bg: oklch(100% 0 0);
                     --brand-primary: oklch(62.67% 0.189 148.65);
+                    --finished-color: oklch(55% 0.15 250);
                     --shadow-elevated: 0 20px 25px -5px oklch(0% 0 0 / 10%), 0 8px 10px -6px oklch(0% 0 0 / 10%);
                     --text-muted: oklch(50% 0.02 260);
                 }
@@ -72,7 +81,7 @@ class MatchPrediction extends HTMLElement {
                     gap: 1rem;
                     transition: transform 0.3s ease;
                     border: 1px solid oklch(90% 0.02 260);
-                    position: relative;
+                    ${isFinished ? 'border-left: 4px solid var(--finished-color);' : ''}
                 }
                 .card:hover { transform: translateY(-4px); }
                 .match-meta {
@@ -80,7 +89,6 @@ class MatchPrediction extends HTMLElement {
                     font-size: 0.8rem;
                     color: var(--text-muted);
                     font-weight: 600;
-                    margin-bottom: 0.5rem;
                 }
                 .match-info {
                     display: grid;
@@ -100,28 +108,29 @@ class MatchPrediction extends HTMLElement {
                 .logo-container img { width: 100%; height: 100%; object-fit: contain; }
                 .team-name { font-weight: 700; font-size: 0.9rem; color: oklch(20% 0.02 260); }
                 .score-display {
-                    font-size: 2rem; font-weight: 800;
-                    color: var(--brand-primary);
+                    font-size: 2.5rem; font-weight: 800;
+                    color: ${isFinished ? 'var(--finished-color)' : 'var(--brand-primary)'};
                     display: flex; align-items: center; gap: 0.5rem;
                 }
                 .vs { font-size: 0.7rem; color: oklch(60% 0.02 260); font-weight: 600; }
+                .status-tag {
+                    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
+                    font-weight: 800; padding: 2px 8px; border-radius: 4px; align-self: center;
+                    background: ${isFinished ? 'var(--finished-color)' : 'var(--brand-primary)'};
+                    color: white;
+                }
                 .predict-btn {
                     background: oklch(95% 0.01 260);
                     color: oklch(20% 0.02 260);
                     border: none; padding: 0.6rem; border-radius: 8px;
                     font-weight: 600; cursor: pointer; transition: all 0.2s;
+                    display: ${isFinished ? 'none' : 'block'};
                 }
                 .predict-btn:hover { background: var(--brand-primary); color: white; }
-                .prediction-tag {
-                    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;
-                    color: var(--brand-primary); font-weight: 800;
-                    visibility: ${isPredicted ? 'visible' : 'hidden'};
-                    text-align: center;
-                }
             </style>
             <div class="card">
                 <div class="match-meta">${this.matchDate} ${this.matchTime}</div>
-                <div class="prediction-tag">AI Prediction</div>
+                <div class="status-tag">${isFinished ? 'Match Result' : 'AI Predict'}</div>
                 <div class="match-info">
                     <div class="team">
                         <div class="logo-container"><img src="${this.homeLogo}" alt="${this.homeTeam}"></div>
@@ -137,10 +146,12 @@ class MatchPrediction extends HTMLElement {
                         <span class="team-name">${this.awayTeam}</span>
                     </div>
                 </div>
-                <button class="predict-btn">${isPredicted ? '다시 예측' : 'AI 예측'}</button>
+                ${!isFinished ? `<button class="predict-btn">${isPredicted ? '다시 예측' : '결과 예측하기'}</button>` : ''}
             </div>
         `;
-        this.shadowRoot.querySelector('.predict-btn').onclick = () => this.predict();
+        if (!isFinished) {
+            this.shadowRoot.querySelector('.predict-btn').onclick = () => this.predict();
+        }
     }
 }
 
@@ -148,25 +159,24 @@ customElements.define('match-prediction', MatchPrediction);
 
 const DATA = {
     K1: [
-        { date: '2026.03.01', time: '14:00', home: '울산 HD', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hPow: 88, aPow: 82 },
-        { date: '2026.03.01', time: '16:30', home: '전북 현대', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hPow: 80, aPow: 83 },
-        { date: '2026.03.02', time: '14:00', home: '광주 FC', away: '인천 유나이티드', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', hPow: 78, aPow: 75 },
-        { date: '2026.03.02', time: '16:30', home: '강원 FC', away: '제주 유나이티드', hLogo: 'https://www.kleague.com/images/club/club_symbol_K21_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K20.png', hPow: 76, aPow: 74 },
-        { date: '2026.03.07', time: '14:00', home: '대구 FC', away: '대전 하나 시티즌', hLogo: 'https://www.kleague.com/images/club/club_symbol_K17.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K10.png', hPow: 72, aPow: 73 },
-        { date: '2026.03.07', time: '16:30', home: '수원 FC', away: '김천 상무', hLogo: 'https://www.kleague.com/images/club/club_symbol_K29.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K25.png', hPow: 71, aPow: 77 }
+        // Finished Matches (Round 1 - Feb 2026)
+        { date: '2026.02.21', time: '14:00', status: 'finished', home: '울산 HD', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hScore: 2, aScore: 1, hPow: 88, aPow: 83 },
+        { date: '2026.02.21', time: '16:30', status: 'finished', home: '전북 현대', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hScore: 1, aScore: 1, hPow: 80, aPow: 82 },
+        { date: '2026.02.22', time: '14:00', status: 'finished', home: '광주 FC', away: '강원 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K21_2023.png', hScore: 3, aScore: 0, hPow: 78, aPow: 76 },
+        // Upcoming Matches
+        { date: '2026.03.01', time: '14:00', status: 'upcoming', home: '울산 HD', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hPow: 88, aPow: 82 },
+        { date: '2026.03.01', time: '16:30', status: 'upcoming', home: '전북 현대', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hPow: 80, aPow: 83 },
+        { date: '2026.03.02', time: '14:00', status: 'upcoming', home: '광주 FC', away: '인천 유나이티드', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', hPow: 78, aPow: 75 },
     ],
     K2: [
-        { date: '2026.03.01', time: '13:30', home: '수원 삼성', away: '부산 아이파크', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K06.png', hPow: 75, aPow: 72 },
-        { date: '2026.03.01', time: '16:00', home: '서울 이랜드', away: 'FC 안양', hLogo: 'https://www.kleague.com/images/club/club_symbol_K27.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K26.png', hPow: 70, aPow: 71 },
-        { date: '2026.03.02', time: '13:30', home: '성남 FC', away: '전남 드래곤즈', hLogo: 'https://www.kleague.com/images/club/club_symbol_K08.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K07.png', hPow: 68, aPow: 69 },
-        { date: '2026.03.02', time: '16:00', home: '부천 FC 1995', away: '경남 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K23.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K19.png', hPow: 67, aPow: 66 },
-        { date: '2026.03.08', time: '13:30', home: '충남 아산', away: '김포 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K30.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K31.png', hPow: 65, aPow: 64 },
-        { date: '2026.03.08', time: '16:00', home: '충북 청주', away: '천안 시티', hLogo: 'https://www.kleague.com/images/club/club_symbol_K32.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K33.png', hPow: 63, aPow: 62 },
-        { date: '2026.03.09', time: '19:30', home: '안산 그리너스', away: '휴식팀', hLogo: 'https://www.kleague.com/images/club/club_symbol_K28.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K00.png', hPow: 60, aPow: 0 }
+        // Finished Matches
+        { date: '2026.02.22', time: '13:30', status: 'finished', home: '수원 삼성', away: '성남 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K08.png', hScore: 2, aScore: 0, hPow: 75, aPow: 68 },
+        // Upcoming Matches
+        { date: '2026.03.01', time: '13:30', status: 'upcoming', home: '수원 삼성', away: '부산 아이파크', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K06.png', hPow: 75, aPow: 72 },
+        { date: '2026.03.01', time: '16:00', status: 'upcoming', home: '서울 이랜드', away: 'FC 안양', hLogo: 'https://www.kleague.com/images/club/club_symbol_K27.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K26.png', hPow: 70, aPow: 71 },
     ]
 };
 
-// Initial standings data
 const STANDINGS_DATA = {
     K1: [
         { team: '울산 HD', logo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
@@ -203,8 +213,7 @@ function renderStandings(league) {
     const tbody = document.getElementById('standings-body');
     if (!tbody) return;
 
-    // Sort by Points (desc), then Goal Diff (not tracked here but standard), then Wins
-    const data = STANDINGS_DATA[league].sort((a, b) => b.pts - a.pts || b.w - a.w);
+    const data = [...STANDINGS_DATA[league]].sort((a, b) => b.pts - a.pts || b.w - a.w);
     
     tbody.innerHTML = data.map((team, index) => `
         <tr>
@@ -222,33 +231,30 @@ function renderStandings(league) {
     `).join('');
 }
 
-function updateStandings(league, result) {
+function updateStandings(league, result, isBatch = false) {
     const home = STANDINGS_DATA[league].find(t => t.team === result.home);
     const away = STANDINGS_DATA[league].find(t => t.team === result.away);
 
     if (home && away) {
-        // Reset stats for simplicity in this demo (re-calculating from 0 each predict)
-        // In a real app, you'd store match history or handle state better
         home.p++; away.p++;
-        
         if (result.hScore > result.aScore) {
-            home.w++; home.pts += 3;
-            away.l++;
+            home.w++; home.pts += 3; away.l++;
         } else if (result.hScore < result.aScore) {
-            away.w++; away.pts += 3;
-            home.l++;
+            away.w++; away.pts += 3; home.l++;
         } else {
-            home.d++; home.pts += 1;
-            away.d++; away.pts += 1;
+            home.d++; home.pts += 1; away.d++; away.pts += 1;
         }
     }
-    renderStandings(league);
+    if (!isBatch) renderStandings(league);
 }
 
 function init() {
     const league = document.body.dataset.league;
     const matchList = document.getElementById('match-list');
     const predictAllBtn = document.getElementById('predict-all-btn');
+
+    // Reset standings to initial state (to be populated by finished matches)
+    STANDINGS_DATA[league].forEach(t => { t.p=0; t.w=0; t.d=0; t.l=0; t.pts=0; });
 
     if (matchList && DATA[league]) {
         DATA[league].forEach(match => {
@@ -261,25 +267,37 @@ function init() {
             el.setAttribute('away-power', match.aPow);
             el.setAttribute('match-date', match.date);
             el.setAttribute('match-time', match.time);
+            el.setAttribute('status', match.status);
+            
+            if (match.status === 'finished') {
+                el.setAttribute('home-score', match.hScore);
+                el.setAttribute('away-score', match.aScore);
+                updateStandings(league, { home: match.home, away: match.away, hScore: match.hScore, aScore: match.aScore }, true);
+            }
             matchList.appendChild(el);
         });
     }
 
     if (predictAllBtn) {
         predictAllBtn.onclick = () => {
-            // Reset standings before predicting all to avoid infinite accumulation
+            // Re-calculate starting from finished matches only
             STANDINGS_DATA[league].forEach(t => { t.p=0; t.w=0; t.d=0; t.l=0; t.pts=0; });
-            
-            const allCards = document.querySelectorAll('match-prediction');
+            DATA[league].filter(m => m.status === 'finished').forEach(m => {
+                updateStandings(league, { home: m.home, away: m.away, hScore: m.hScore, aScore: m.aScore }, true);
+            });
+
+            const allCards = document.querySelectorAll('match-prediction[status="upcoming"]');
             allCards.forEach(card => card.predict());
+            renderStandings(league);
         };
     }
 
     renderStandings(league);
 
-    // Listen for prediction events to update standings
     document.addEventListener('match-predicted', (e) => {
-        updateStandings(league, e.detail);
+        if (e.detail.status === 'upcoming') {
+            updateStandings(league, e.detail);
+        }
     });
 }
 

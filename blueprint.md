@@ -12,9 +12,11 @@ A high-performance, visually stunning web application for predicting K-League ma
 - **Responsiveness:** Full mobile support using Container Queries and Flexbox/Grid.
 
 ### Features
-- **Match Selection:** Browse through current 2026 K-League matches.
+- **Match Lifecycle:** 
+    - **Past Matches:** Display actual results for completed games.
+    - **Upcoming Matches:** Provide AI-powered result predictions for future games.
 - **Match Schedule:** Display upcoming match dates and times.
-- **League Standings:** Real-time league table showing rank, team, points, and stats.
+- **League Standings:** Real-time league table showing rank, team, points, and stats, incorporating both actual results and predictions.
 - **AI Prediction Engine:** A simulated prediction logic that analyzes "team stats" to suggest a score.
 - **Multi-League Support:** Separate pages for K-League 1 and K-League 2.
 - **Interactive Web Components:** Encapsulated `<match-card>` elements for each game.
@@ -26,10 +28,10 @@ A high-performance, visually stunning web application for predicting K-League ma
 - **Icons:** SVG-based iconography for sharpness.
 
 ## Current Plan
-1. **Add Schedule Data:** Include match dates and times in the data structure.
-2. **Implement Standings Table:** Create a new section and component to display league rankings.
-3. **Update UI:** 
-    - Modify `index.html` and `k2.html` to include the standings section.
-    - Update `style.css` for table styling.
-4. **Refine Logic:** Calculate standings dynamically based on "current" mock data or static initial values.
+1. **Update Data Structure:** Add `status`, `actualHScore`, and `actualAScore` to the match data.
+2. **Refine Component Logic:** 
+    - Display "RESULT" and actual scores for `finished` matches.
+    - Display "AI PREDICTION" and interactive button for `upcoming` matches.
+3. **Standings Integration:** Automatically calculate initial standings based on `finished` matches upon page load.
+4. **UI Updates:** Add visual distinctions between finished and upcoming matches.
 5. **Deployment:** Commit and push the updated application to GitHub.
