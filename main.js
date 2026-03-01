@@ -130,7 +130,7 @@ class MatchPrediction extends HTMLElement {
             </style>
             <div class="card">
                 <div class="match-meta">${this.matchDate} ${this.matchTime}</div>
-                <div class="status-tag">${isFinished ? 'Match Result' : 'AI Predict'}</div>
+                <div class="status-tag">${isFinished ? '경기 결과' : 'AI 결과 예측'}</div>
                 <div class="match-info">
                     <div class="team">
                         <div class="logo-container"><img src="${this.homeLogo}" alt="${this.homeTeam}"></div>
@@ -146,7 +146,7 @@ class MatchPrediction extends HTMLElement {
                         <span class="team-name">${this.awayTeam}</span>
                     </div>
                 </div>
-                ${!isFinished ? `<button class="predict-btn">${isPredicted ? '다시 예측' : '결과 예측하기'}</button>` : ''}
+                ${!isFinished ? `<button class="predict-btn">${isPredicted ? '다시 예측' : 'AI 예측 실행'}</button>` : ''}
             </div>
         `;
         if (!isFinished) {
@@ -159,51 +159,52 @@ customElements.define('match-prediction', MatchPrediction);
 
 const DATA = {
     K1: [
-        // Finished Matches (Round 1 - Feb 2026)
-        { date: '2026.02.21', time: '14:00', status: 'finished', home: '울산 HD', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hScore: 2, aScore: 1, hPow: 88, aPow: 83 },
-        { date: '2026.02.21', time: '16:30', status: 'finished', home: '전북 현대', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hScore: 1, aScore: 1, hPow: 80, aPow: 82 },
-        { date: '2026.02.22', time: '14:00', status: 'finished', home: '광주 FC', away: '강원 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K21_2023.png', hScore: 3, aScore: 0, hPow: 78, aPow: 76 },
-        // Upcoming Matches
-        { date: '2026.03.01', time: '14:00', status: 'upcoming', home: '울산 HD', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hPow: 88, aPow: 82 },
-        { date: '2026.03.01', time: '16:30', status: 'upcoming', home: '전북 현대', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hPow: 80, aPow: 83 },
-        { date: '2026.03.02', time: '14:00', status: 'upcoming', home: '광주 FC', away: '인천 유나이티드', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', hPow: 78, aPow: 75 },
+        // Finished Matches (Round 1 - Feb 28, 2026)
+        { date: '2026.02.28', time: '14:00', status: 'finished', home: '울산 HD', away: 'FC 서울', hLogo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', hScore: 1, aScore: 0, hPow: 88, aPow: 83 },
+        { date: '2026.02.28', time: '14:00', status: 'finished', home: '전북 현대', away: '포항 스틸러스', hLogo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', hScore: 2, aScore: 2, hPow: 85, aPow: 82 },
+        { date: '2026.02.28', time: '16:30', status: 'finished', home: '광주 FC', away: '강원 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K22.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K21_2023.png', hScore: 0, aScore: 1, hPow: 78, aPow: 80 },
+        // Today's Finished Matches (March 1, 2026 morning)
+        { date: '2026.03.01', time: '11:00', status: 'finished', home: '제주 유나이티드', away: '인천 유나이티드', hLogo: 'https://www.kleague.com/images/club/club_symbol_K20.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', hScore: 1, aScore: 2, hPow: 74, aPow: 75 },
+        // Upcoming Matches (March 1 afternoon & March 2)
+        { date: '2026.03.01', time: '16:30', status: 'upcoming', home: '김천 상무', away: '대전 하나 시티즌', hLogo: 'https://www.kleague.com/images/club/club_symbol_K25.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K10.png', hPow: 77, aPow: 73 },
+        { date: '2026.03.02', time: '19:30', status: 'upcoming', home: '부천 FC 1995', away: 'FC 안양', hLogo: 'https://www.kleague.com/images/club/club_symbol_K23.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K26.png', hPow: 70, aPow: 72 }
     ],
     K2: [
         // Finished Matches
-        { date: '2026.02.22', time: '13:30', status: 'finished', home: '수원 삼성', away: '성남 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K08.png', hScore: 2, aScore: 0, hPow: 75, aPow: 68 },
+        { date: '2026.02.28', time: '13:30', status: 'finished', home: '수원 삼성', away: '부산 아이파크', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K06.png', hScore: 3, aScore: 1, hPow: 75, aPow: 72 },
         // Upcoming Matches
-        { date: '2026.03.01', time: '13:30', status: 'upcoming', home: '수원 삼성', away: '부산 아이파크', hLogo: 'https://www.kleague.com/images/club/club_symbol_K02.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K06.png', hPow: 75, aPow: 72 },
-        { date: '2026.03.01', time: '16:00', status: 'upcoming', home: '서울 이랜드', away: 'FC 안양', hLogo: 'https://www.kleague.com/images/club/club_symbol_K27.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K26.png', hPow: 70, aPow: 71 },
+        { date: '2026.03.01', time: '15:00', status: 'upcoming', home: '서울 이랜드', away: '대구 FC', hLogo: 'https://www.kleague.com/images/club/club_symbol_K27.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K17.png', hPow: 70, aPow: 73 },
+        { date: '2026.03.01', time: '17:30', status: 'upcoming', home: '수원 FC', away: '전남 드래곤즈', hLogo: 'https://www.kleague.com/images/club/club_symbol_K29.png', aLogo: 'https://www.kleague.com/images/club/club_symbol_K07.png', hPow: 71, aPow: 69 },
     ]
 };
 
 const STANDINGS_DATA = {
     K1: [
         { team: '울산 HD', logo: 'https://www.kleague.com/images/club/club_symbol_K01_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '포항 스틸러스', logo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '전북 현대', logo: 'https://www.kleague.com/images/club/club_symbol_K04_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '포항 스틸러스', logo: 'https://www.kleague.com/images/club/club_symbol_K03_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: 'FC 서울', logo: 'https://www.kleague.com/images/club/club_symbol_K09_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '광주 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K22.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '인천 유나이티드', logo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '강원 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K21_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '인천 유나이티드', logo: 'https://www.kleague.com/images/club/club_symbol_K18_2023.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '광주 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K22.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '제주 유나이티드', logo: 'https://www.kleague.com/images/club/club_symbol_K20.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '대구 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K17.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '김천 상무', logo: 'https://www.kleague.com/images/club/club_symbol_K25.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '대전 하나 시티즌', logo: 'https://www.kleague.com/images/club/club_symbol_K10.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '수원 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K29.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '김천 상무', logo: 'https://www.kleague.com/images/club/club_symbol_K25.png', p: 0, w: 0, d: 0, l: 0, pts: 0 }
+        { team: 'FC 안양', logo: 'https://www.kleague.com/images/club/club_symbol_K26.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '부천 FC 1995', logo: 'https://www.kleague.com/images/club/club_symbol_K23.png', p: 0, w: 0, d: 0, l: 0, pts: 0 }
     ],
     K2: [
         { team: '수원 삼성', logo: 'https://www.kleague.com/images/club/club_symbol_K02.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '대구 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K17.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '수원 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K29.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '부산 아이파크', logo: 'https://www.kleague.com/images/club/club_symbol_K06.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '서울 이랜드', logo: 'https://www.kleague.com/images/club/club_symbol_K27.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: 'FC 안양', logo: 'https://www.kleague.com/images/club/club_symbol_K26.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '성남 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K08.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '전남 드래곤즈', logo: 'https://www.kleague.com/images/club/club_symbol_K07.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
-        { team: '부천 FC 1995', logo: 'https://www.kleague.com/images/club/club_symbol_K23.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '서울 이랜드', logo: 'https://www.kleague.com/images/club/club_symbol_K27.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '경남 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K19.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '충남 아산', logo: 'https://www.kleague.com/images/club/club_symbol_K30.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '김포 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K31.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '충북 청주', logo: 'https://www.kleague.com/images/club/club_symbol_K32.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
+        { team: '성남 FC', logo: 'https://www.kleague.com/images/club/club_symbol_K08.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '천안 시티', logo: 'https://www.kleague.com/images/club/club_symbol_K33.png', p: 0, w: 0, d: 0, l: 0, pts: 0 },
         { team: '안산 그리너스', logo: 'https://www.kleague.com/images/club/club_symbol_K28.png', p: 0, w: 0, d: 0, l: 0, pts: 0 }
     ]
@@ -253,7 +254,6 @@ function init() {
     const matchList = document.getElementById('match-list');
     const predictAllBtn = document.getElementById('predict-all-btn');
 
-    // Reset standings to initial state (to be populated by finished matches)
     STANDINGS_DATA[league].forEach(t => { t.p=0; t.w=0; t.d=0; t.l=0; t.pts=0; });
 
     if (matchList && DATA[league]) {
@@ -280,7 +280,6 @@ function init() {
 
     if (predictAllBtn) {
         predictAllBtn.onclick = () => {
-            // Re-calculate starting from finished matches only
             STANDINGS_DATA[league].forEach(t => { t.p=0; t.w=0; t.d=0; t.l=0; t.pts=0; });
             DATA[league].filter(m => m.status === 'finished').forEach(m => {
                 updateStandings(league, { home: m.home, away: m.away, hScore: m.hScore, aScore: m.aScore }, true);
