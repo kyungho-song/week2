@@ -1,45 +1,142 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@layer base, components, utilities;
 
-:root {
-    --primary-color: #00A550;
-    --secondary-color: #FFC72C;
-    --background-color: #f0f2f5;
-    --text-color: #333;
-    --card-background: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+@layer base {
+    :root {
+        /* Colors using oklch for perceptual uniformity */
+        --brand-primary: oklch(62.67% 0.189 148.65); /* K-League Green */
+        --brand-secondary: oklch(35% 0.1 260); /* Deep Navy */
+        --accent: oklch(85% 0.15 90); /* Soft Yellow/Gold */
+        --bg-main: oklch(98% 0.01 260);
+        --text-main: oklch(20% 0.02 260);
+        --text-muted: oklch(50% 0.02 260);
+        --card-bg: oklch(100% 0 0);
+        
+        /* Spacing */
+        --space-sm: 0.5rem;
+        --space-md: 1rem;
+        --space-lg: 2rem;
+        
+        /* Effects */
+        --shadow-soft: 0 4px 6px -1px oklch(0% 0 0 / 5%), 0 2px 4px -2px oklch(0% 0 0 / 5%);
+        --shadow-elevated: 0 20px 25px -5px oklch(0% 0 0 / 10%), 0 8px 10px -6px oklch(0% 0 0 / 10%);
+        --radius-md: 12px;
+        --radius-lg: 24px;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        line-height: 1.5;
+        overflow-x: hidden;
+    }
+
+    .texture-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        z-index: 100;
+    }
 }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    margin: 0;
+@layer components {
+    .hero {
+        background: linear-gradient(135deg, var(--brand-secondary), var(--brand-primary));
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background: oklch(100% 0 0 / 20%);
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        letter-spacing: 0.1em;
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+    }
+
+    .highlight {
+        color: var(--accent);
+    }
+
+    .controls {
+        max-width: 1000px;
+        margin: -2rem auto 2rem;
+        padding: 0 1rem;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+    }
+
+    .btn-primary {
+        background-color: var(--brand-primary);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: var(--shadow-elevated);
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        background-color: oklch(65% 0.2 148.65);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .match-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem 4rem;
+    }
+
+    .footer {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
 }
 
-header {
-    background-color: var(--primary-color);
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    box-shadow: 0 2px 4px var(--shadow-color);
-}
-
-main {
-    padding: 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
+/* Custom Element Styling inside main.js will use these variables */
 match-prediction {
     display: block;
-    background-color: var(--card-background);
-    border-radius: 8px;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    margin-bottom: 1.5rem;
-    padding: 1.5rem;
-    transition: transform 0.2s;
-}
-
-match-prediction:hover {
-    transform: translateY(-5px);
+    container-type: inline-size;
 }

@@ -1,18 +1,40 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-League Predictor</title>
+    <title>K-League AI Match Predictor | K리그 경기 결과 예측</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>K-League Predictions</h1>
+    <div class="texture-overlay"></div>
+    <header class="hero">
+        <div class="hero-content">
+            <span class="badge">SEASON 2024</span>
+            <h1>K-League <span class="highlight">Predictor</span></h1>
+            <p>AI 기반 데이터 분석을 통한 K리그 경기 결과 예측 프로그램</p>
+        </div>
     </header>
-    <main id="app">
-        <!-- Match predictions will be rendered here -->
+
+    <main id="app-container">
+        <section class="controls">
+            <button id="predict-all-btn" class="btn-primary">모든 경기 예측하기</button>
+        </section>
+        
+        <div id="match-list" class="match-grid">
+            <!-- Web Components will be injected here -->
+        </div>
     </main>
-    <script src="main.js"></script>
+
+    <footer class="footer">
+        <p>&copy; 2024 K-League Match Predictor. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js" type="module"></script>
 </body>
 </html>
